@@ -1,5 +1,5 @@
-import router from "@/router/index";
-import {getRequest} from "@/utils/api";
+import router from "@/router/index.js";
+import {getRequest} from "@/utils/api.js";
 
 router.beforeEach((to,from,next) =>{
     if (localStorage.getItem('token')){
@@ -15,7 +15,7 @@ router.beforeEach((to,from,next) =>{
         }
         next();
     }else {
-        if (to.path == '/'){
+       if (to.path == '/' || to.path == '/register' || to.path == '/home'){
             next();
         }else {
             next('?/redirect='+to.path);

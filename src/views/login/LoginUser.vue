@@ -1,74 +1,76 @@
 <template>
-  <div>
-    <a-form
-        :model="LoginForm"
-        name="normal_login"
-        class="login-form"
-        @finish="onFinish">
-      <h3 class="loginTitle">乐享校园二手服务平台</h3>
-      <hr>
-      <a-form-item
-          label="手机号"
-          name="userPhone"
-          :rules="[{ required: true, message: '请输入手机号' }]">
-        <a-input v-model:value="LoginForm.userPhone">
-          <template #prefix>
-            <UserOutlined class="site-form-item-icon"/>
-          </template>
-        </a-input>
-      </a-form-item>
-
-      <a-form-item
-          label="密 码"
-          name="passWord"
-          :rules="[{ required: true, message: '请输入密码' }]">
-        <a-input-password v-model:value="LoginForm.passWord" style="margin-left: 10px;width: 261.95px">
-          <template #prefix>
-            <LockOutlined class="site-form-item-icon"/>
-          </template>
-        </a-input-password>
-      </a-form-item>
-      <a-form-item
-          label="验证码"
-          name="code"
-          style="align-items: center;display: flex"
-          :rules="[{ required: true, message: '请输入验证码' }]">
-        <a-input v-model:value="LoginForm.code" style="width: 120px;height: 35px;margin-right: 5px">
-          <template #prefix>
-          </template>
-        </a-input>
-        <img :src="captchaUrl" @click="checkCaptcha()" style="height: 38px" align="absmiddle"/>
-      </a-form-item>
-
-      <a-form-item>
-        <a-form-item name="remember" no-style>
-          <a-checkbox v-model:checked="LoginForm.remember">记住密码</a-checkbox>
+  <div class="loginPage">
+    <div>
+      <a-form
+          :model="LoginForm"
+          name="normal_login"
+          @finish="submitLogin"
+          class="login-form">
+        <h3 class="loginTitle">乐享校园二手服务平台</h3>
+        <hr>
+        <a-form-item
+            label="手机号"
+            name="userPhone"
+            :rules="[{ required: true, message: '请输入手机号' }]">
+          <a-input v-model:value="LoginForm.userPhone">
+            <template #prefix>
+              <PhoneOutlined class="site-form-item-icon" />
+            </template>
+          </a-input>
         </a-form-item>
-        <a class="login-form-forgot" href="">忘记密码</a>
-      </a-form-item>
 
-      <a-form-item>
-        <a-button type="primary" html-type="submit" class="login-form-button" @click="submitLogin()">
-          登 录
-        </a-button>
-        <a href="" style="color: red;">没有账号？立即注册！</a>
-      </a-form-item>
-    </a-form>
+        <a-form-item
+            label="密 码"
+            name="passWord"
+            :rules="[{ required: true, message: '请输入密码' }]">
+          <a-input-password v-model:value="LoginForm.passWord" style="margin-left: 10px;width: 261.95px">
+            <template #prefix>
+              <LockOutlined class="site-form-item-icon"/>
+            </template>
+          </a-input-password>
+        </a-form-item>
+        <a-form-item
+            label="验证码"
+            name="code"
+            :rules="[{ required: true, message: '请输入验证码' }]">
+          <a-input v-model:value="LoginForm.code" style="width: 120px;height: 35px;line-height:35px;margin-right: 5px">
+            <template #prefix>
+            </template>
+          </a-input>
+          <img :src="captchaUrl" @click="checkCaptcha()" style="height: 38px;" align="absmiddle"/>
+        </a-form-item>
+
+        <a-form-item>
+          <a-form-item name="remember" no-style>
+            <a-checkbox v-model:checked="LoginForm.remember">记住密码</a-checkbox>
+          </a-form-item>
+          <a class="login-form-forgot" href="">忘记密码</a>
+        </a-form-item>
+
+        <a-form-item>
+          <a-button type="primary" html-type="submit" class="login-form-button">
+            登 录
+          </a-button>
+          <a style="color: red;" @click="goRegister()">没有账号？立即注册！</a>
+        </a-form-item>
+      </a-form>
+    </div>
   </div>
 </template>
 
 <script>
 
 import {
-  UserOutlined,
+  PhoneOutlined,
   LockOutlined
 } from '@ant-design/icons-vue';
-import {postRequest} from "@/utils/api";
+import {postRequest,getRequest} from "@/utils/api.js";
 import router from "@/router";
+
 
 export default {
   components:{
-    UserOutlined,
+    PhoneOutlined,
     LockOutlined
   },
   name: "LoginUser",
@@ -81,11 +83,13 @@ export default {
         code: '',
         remember: true
       }
+
     }
   },
   methods: {
+    /*登录到首页*/
     submitLogin(){
-      postRequest('/system/login',this.LoginForm).then(resp => {
+      return postRequest('/system/login',this.LoginForm).then(resp => {
         if (resp){
           const tokenStr = resp.data;
           localStorage.setItem('token',tokenStr);
@@ -95,21 +99,27 @@ export default {
         }
       })
     },
+    goRegister(){
+      router.replace('/register');
+    },
     checkCaptcha(){
       this.captchaUrl = '/code/generateCode?time='+new Date();
-    },
-    onFinish(values) {
-      console.log('Success:', values);
     }
 
-  }
+  },
+
 }
+
 
 </script>
 
 <style>
-
+.loginPage{
+  background: url("../../assets/login.jpg") no-repeat;
+  background-size: 100% 100%;
+}
 .login-form{
+  opacity: 0.9;
   border-radius: 15px;
   background-clip: padding-box;
   margin: 180px auto;

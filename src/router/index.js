@@ -1,7 +1,11 @@
 import {createApp} from "vue"
-import LoginUser from "@/views/login/LoginUser";
+import LoginUser from "@/views/login/LoginUser.vue";
 import {createRouter,createWebHashHistory}from 'vue-router'
-import Home from "@/views/Home";
+import Home from "@/views/Home.vue";
+import Register from "@/views/register/Register.vue";
+import List from "@/views/content/List.vue";
+import getGoodsByName from "@/views/content/getGoodsByName.vue";
+
 
 
 //定义路由
@@ -13,11 +17,30 @@ const routes = [
         hidden: true
     },
     {
+        path: '/register',
+        name: 'Register',
+        component: Register,
+        hidden: true
+    },
+    {
         path: '/home',
         name: 'Home',
         component: Home,
-        hidden: true
+        children:[
+            {
+                path: '/list',
+                name: 'List',
+                component: List
+            },
+            {
+                path: '/byname',
+                name: 'getGoodsByName',
+                component: getGoodsByName
+            }
+        ]
     }
+
+
 ]
 
 const router = createRouter({

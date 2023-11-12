@@ -1,6 +1,6 @@
 import axios from "axios";
 import router from "../router"
-import { message } from 'ant-design-vue'
+import { message } from 'antd'
 
 //请求拦截器
 axios.interceptors.request.use(config =>{
@@ -14,26 +14,26 @@ axios.interceptors.request.use(config =>{
 
 //响应拦截器
 axios.interceptors.response.use(success => {
-    if (success.status && success == 200){
+    if (success.status && success.status == 200){
         if (success.data.code == 500 || success.data.code == 401 || success.data.code == 403){
-            message.error({message: success.data.message});
+            message.error(success.data.msg + "");
             return;
         }
-        if (success.data.message){
-            message.success({message: success.data.message});
+        if (success.data.msg){
+            message.success(success.data.msg + "");
         }
     }
     return success.data;
 },error => {
     if (error.response.code == 504 || error.response.code ==404){
-        message.error({message: '找不到服务器'});
+        message.error('找不到服务器');
     }else if (error.response.config == 403){
-        message.error({message: '权限不足，请联系管理员'});
+        message.error('权限不足，请联系管理员');
     }else if (error.response.code == 401){
-        message.error({message: '尚未登录，请登录！'});
+        message.error( '尚未登录，请登录！');
         router.replace('/'); //去登录页
     }else {
-        message.error({message: error.response.data.message});
+        message.error( error.response.data.msg + "");
     }
     return;
 })
