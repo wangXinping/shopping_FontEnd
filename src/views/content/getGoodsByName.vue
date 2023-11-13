@@ -12,8 +12,10 @@
         </template>
         <template #actions>
           <setting-outlined key="setting" />
-          <HeartOutlined v-if="index.shoppingCar == null" @click="addShoppingCar(index)" />
-          <HeartFilled v-else @click="delShoppingCar(index)"/>
+          <div v-if="index.shoppingCar != null && this.currentUserId != ''">
+            <HeartFilled v-if="index.shoppingCar.userId == this.currentUserId" @click="delShoppingCar(index)"/>
+          </div>
+          <div v-else><HeartOutlined @click="addShoppingCar(index)" /></div>
           <AccountBookOutlined key="ellipsis" />
         </template>
         <a-card-meta style="float:left;"
@@ -40,6 +42,7 @@ export default {
   },
   data(){
     return{
+      currentUserId: '',//当前登录用户
       bname:this.str,
       goods:[
         {
@@ -78,6 +81,10 @@ export default {
 
   mounted() {
     this.getSellGoodsByName('');
+    if (localStorage.getItem('user'))
+    {
+      this.currentUserId = JSON.parse(localStorage.getItem('user')).userId;
+    }
   },
   methods:{
     delShoppingCar(index){

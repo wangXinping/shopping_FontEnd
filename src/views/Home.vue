@@ -25,8 +25,10 @@
           root-class-name="root-class-name"
           title="购物车"
           :width="500"
+          @after-open-change="afterOpenChange"
+          @close="closeChange"
           placement="right">
-       <shoppingCar />
+       <shoppingCar ref="car"/>
       </a-drawer>
 
 
@@ -146,18 +148,28 @@ export default defineComponent({
    },
   methods:{
     showDrawer(){
+      this.isExistUser();
       this.open = true;
+    },
+    afterOpenChange(){
+      this.$refs.car.ShoppingCarInfo();
+    },
+    closeChange(){
+      this.$refs.child.getSellGoodsByName('');
     },
     goLogin(){
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
-    onSearch(searchValue){
+    /*判断用户是否登录*/
+    isExistUser(){
       if (!localStorage.getItem('user')){
         message.warning('用户未登录，请先登录！');
-        router.push('/');
-        return;
+        router.replace('/');
       }
+    },
+    onSearch(searchValue){
+      this.isExistUser();
       this.str = searchValue;
       if (searchValue != undefined && searchValue != ''){
         this.$refs.child.getSellGoodsByName(searchValue);
@@ -171,7 +183,6 @@ export default defineComponent({
       this.state.openKeys = this.state.collapsed ? [] : this.state.preOpenKeys;
     },
     gomenu(info){
-      console.log(info.key);
       if (info.key =='home'){
         this.flag= true;
         this.$refs.child.getSellGoodsByName('');

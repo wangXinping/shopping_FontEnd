@@ -27,18 +27,19 @@ const routes = [
         name: 'Home',
         component: Home,
         children:[
-            {
-                path: '/list',
-                name: 'List',
-                component: List
-            },
+
             {
                 path: '/byname',
                 name: 'getGoodsByName',
                 component: getGoodsByName
             }
         ]
-    }
+    },
+    {
+        path: '/list',
+        name: 'List',
+        component: List
+    },
 
 
 ]
