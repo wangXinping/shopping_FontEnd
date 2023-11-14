@@ -14,6 +14,7 @@
           <setting-outlined key="setting" />
           <div v-if="index.shoppingCar != null && this.currentUserId != ''">
             <HeartFilled v-if="index.shoppingCar.userId == this.currentUserId" @click="delShoppingCar(index)"/>
+            <HeartOutlined v-else @click="addShoppingCar(index)" />
           </div>
           <div v-else><HeartOutlined @click="addShoppingCar(index)" /></div>
           <AccountBookOutlined key="ellipsis" />
@@ -81,9 +82,9 @@ export default {
 
   mounted() {
     this.getSellGoodsByName('');
-    if (localStorage.getItem('user'))
+    if (this.$store.state.currentUser)
     {
-      this.currentUserId = JSON.parse(localStorage.getItem('user')).userId;
+      this.currentUserId = this.$store.state.currentUser;
     }
   },
   methods:{

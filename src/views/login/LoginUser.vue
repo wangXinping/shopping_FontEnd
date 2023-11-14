@@ -93,8 +93,8 @@ export default {
         if (resp){
           const tokenStr = resp.data;
           localStorage.setItem('token',tokenStr);
+          router.replace('/');
           //页面跳转
-          //let path = this.$route.query.redirect;
           router.replace('/home');
         }
       })

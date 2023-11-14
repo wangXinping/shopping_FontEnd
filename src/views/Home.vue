@@ -7,7 +7,24 @@
           <li class="li"><h4>欢迎来到乐享校园交易服务平台！希望您在这里找到心仪的商品！</h4></li>
           <li class="li" style="margin-right: 20%"></li>
           <li class="li" v-if="this.user == null"><router-link to="/" style="color: #333">登录</router-link></li>
-          <li class="li" v-else><UserOutlined />&nbsp;&nbsp;{{this.user.userName}}</li>
+          <li class="li" v-else>
+            <a-popover width={1000}>
+              <template #content>
+                <a @click="userInfo">个人设置</a>
+                <a-divider style="margin: 7px auto;"/>
+                  <a-avatar
+                      :size="60"
+                      style="float:left;background-color: #eaeaea;margin-right: 10px"
+                      :src="require('../../../school-shop/images/userFace/'+ this.user.userFace)" />
+                <ul style="list-style: none">
+                  <li>乐享账号：{{this.user.userId}}</li>
+                  <li>昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：{{this.user.userName}}</li>
+                </ul>
+              </template>
+              <UserOutlined /><a style="color: black">&nbsp;&nbsp;{{this.user.userName}}</a>
+            </a-popover>
+
+          </li>
           <li class="li"> | </li>
           <li class="li" v-if="this.user == null"><router-link to="/register" style="color: red">注册</router-link></li>
           <li class="li" v-else><router-link to="/" style="color: black" @click="goLogin"><PoweroffOutlined />&nbsp;&nbsp;退出</router-link></li>
@@ -17,6 +34,8 @@
           <li class="li"><MessageOutlined />&nbsp;&nbsp;联系客服</li>
         </ul>
       </a-layout-header>
+
+
 
       <!--购物车抽屉-->
       <a-drawer
@@ -54,28 +73,33 @@
             <a-affix :offset-top="top">
               <span class="logo"><h1>乐享校园二手服务平台</h1></span>
               <a-input-search
-
                   placeholder="请输入要查询的商品名称..."
                   enter-button
                   @search="onSearch"
+                  @change="showMain"
               />
             </a-affix>
 
           </div>
 
-          <!--轮播图部分-->
-          <div class="carousel"  v-if="flag">
-            <a-carousel autoplay>
-              <div><h3>1</h3></div>
-              <div><h3>2</h3></div>
-              <div><h3>3</h3></div>
-              <div><h3>4</h3></div>
-            </a-carousel>
+          <div v-if="main">
+            <!--轮播图部分-->
+            <div class="carousel"  v-if="flag">
+              <a-carousel autoplay>
+                <div><h3>1</h3></div>
+                <div><h3>2</h3></div>
+                <div><h3>3</h3></div>
+                <div><h3>4</h3></div>
+              </a-carousel>
+            </div>
+            <!--商品展示部分-->
+            <h1 style="text-align: center">商品展示</h1>
+            <div class="shopping_show">
+              <ByName :str="str" ref="child"/>
+            </div>
           </div>
-          <!--商品展示部分-->
-          <h1 style="text-align: center">商品展示</h1>
-          <div class="shopping_show">
-            <ByName :str="str" ref="child"/>
+          <div v-else>
+            <userInfo/>
           </div>
         </div>
       </a-layout-content>
@@ -85,6 +109,7 @@
 </template>
 
 <script>
+import userInfo from "@/views/content/userInfo";
 import shoppingCar from "@/views/content/shoppingCar";
 import ByName from "@/views/content/getGoodsByName.vue"
 import router from "@/router";
@@ -101,14 +126,15 @@ import List from "@/views/content/List";
 export default defineComponent({
   components:{
     shoppingCar,
-    ByName
+    ByName,
+    userInfo
   },
   name: "Home",
   data(){
 
     return{
+      main:true,
       open : ref(false),
-      user:JSON.parse(localStorage.getItem('user')),
       flag:true,
       str:'',
       state:reactive({
@@ -140,6 +166,11 @@ export default defineComponent({
     }
 
   },
+  computed:{
+    user(){
+      return this.$store.state.currentUser;
+    }
+  },
   watch(){
         () => this.state.openKeys,
         (_val, oldVal) => {
@@ -147,6 +178,9 @@ export default defineComponent({
         }
    },
   methods:{
+    userInfo(){
+      this.main=false;
+    },
     showDrawer(){
       this.isExistUser();
       this.open = true;
@@ -168,12 +202,15 @@ export default defineComponent({
         router.replace('/');
       }
     },
+    showMain(){
+      this.main=true;
+    },
     onSearch(searchValue){
       this.isExistUser();
       this.str = searchValue;
       if (searchValue != undefined && searchValue != ''){
-        this.$refs.child.getSellGoodsByName(searchValue);
-        this.flag = false;
+          this.flag = false;
+          this.$refs.child.getSellGoodsByName(searchValue);
       }else {
         message.error('搜索框不允许为空！')
       }
@@ -184,8 +221,12 @@ export default defineComponent({
     },
     gomenu(info){
       if (info.key =='home'){
-        this.flag= true;
-        this.$refs.child.getSellGoodsByName('');
+        if (this.main == true){
+          this.flag= true;
+          this.$refs.child.getSellGoodsByName('');
+        }
+        this.main=true;
+
       }
     }
   }

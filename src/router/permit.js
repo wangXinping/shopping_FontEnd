@@ -1,5 +1,6 @@
 import router from "@/router/index.js";
 import {getRequest} from "@/utils/api.js";
+import store from "@/store";
 
 router.beforeEach((to,from,next) =>{
     if (localStorage.getItem('token')){
@@ -9,6 +10,7 @@ router.beforeEach((to,from,next) =>{
                 if (resp){
                     //将用户信息存入localstorage中
                     localStorage.setItem('user',JSON.stringify(resp));
+                    store.commit('INIT_USER',resp)
                     next();
                 }
             })
