@@ -5,7 +5,7 @@ import Home from "@/views/Home.vue";
 import Register from "@/views/register/Register.vue";
 import List from "@/views/content/List.vue";
 import getGoodsByName from "@/views/content/getGoodsByName.vue";
-import userInfo from "@/views/content/userInfo";
+import userInfo from "@/views/content/UserInfo";
 
 
 

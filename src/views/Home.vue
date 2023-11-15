@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import userInfo from "@/views/content/userInfo";
+import userInfo from "@/views/content/UserInfo";
 import shoppingCar from "@/views/content/shoppingCar";
 import ByName from "@/views/content/getGoodsByName.vue"
 import router from "@/router";

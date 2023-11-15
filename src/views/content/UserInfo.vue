@@ -3,7 +3,8 @@
     <a-page-header title="个人设置">
       <a-divider style="margin: 8px auto"/>
       <template #extra>
-        <a-button key="3">地址管理</a-button>
+        <a-button key="4" @click="getUserInfo">个人资料</a-button>
+        <a-button key="3" @click="getAddress">地址管理</a-button>
         <a-button key="2" @click="updatePwd">修改密码</a-button>
         <a-popconfirm
           ok-text="确认"
@@ -17,8 +18,14 @@
       </template>
       <template #footer>
       </template>
-      <div class="content" style="background-color: white;margin: 0 auto">
 
+      <!--   地址管理   -->
+      <div class="addressAll" v-if="openAddress">
+        <ReceAddress />
+      </div>
+
+      <!--  个人资料    -->
+      <div v-else class="content" style="background-color: white;margin: 0 auto">
         <div  class="userInfo">
           <a-card class="box-card">
             <div slot="header" class="clearfix">
@@ -137,11 +144,16 @@
 <script>
 import {putRequest,getRequest,deleteRequest} from "@/utils/api";
 import router from "@/router";
+import ReceAddress from "@/views/content/ReceAddress";
 
 export default {
+  components:{
+    ReceAddress
+  },
   name: "userInfo",
   data(){
     return{
+      openAddress:false,
       headers:{
         Authorization:localStorage.getItem('token')
       },
@@ -166,6 +178,12 @@ export default {
     }
   },
   methods:{
+    getUserInfo(){
+      this.openAddress = false;
+    },
+    getAddress(){
+      this.openAddress = true;
+    },
     deleteUser(){
       return new Promise(resolve => {
         setTimeout(() => resolve(true), 2000);
@@ -203,8 +221,9 @@ export default {
         if (resp){
           this.currentUser=resp;
           this.currentUser2 = Object.assign({},this.currentUser);
-          localStorage.setItem('user',JSON.stringify(resp));
-          this.$store.commit('INIT_USER',resp.data)
+          localStorage.setItem('user',JSON.stringify(this.currentUser2));
+          this.$store.commit('INIT_USER',resp);
+
         }
       })
     },
@@ -231,6 +250,14 @@ export default {
 </script>
 
 <style scoped>
+.addressAll{
+  overflow: auto;
+  width: 850px;
+  margin: 30px auto auto auto;
+  background-color: white;
+  height: 620px;
+  border-radius: 8px;
+}
 .userInfo{
   position: absolute;
   left: 25%;
