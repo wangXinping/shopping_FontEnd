@@ -17,7 +17,7 @@
             <HeartOutlined v-else @click="addShoppingCar(index)" />
           </div>
           <div v-else><HeartOutlined @click="addShoppingCar(index)" /></div>
-          <AccountBookOutlined key="ellipsis" />
+          <AccountBookOutlined key="ellipsis" @click="goOrderDetail(index)"/>
         </template>
         <a-card-meta style="float:left;"
                      :title="index.goodsName.length>5?index.goodsName.substring(0,5)+'..':index.goodsName"
@@ -52,6 +52,7 @@ export default {
           price: '',
           categoryId:'',
           present:'',
+          goodsNumber:1,
           createTime:'',
           goodsImage:{
             imagesId:'',
@@ -88,6 +89,10 @@ export default {
     }
   },
   methods:{
+    goOrderDetail(value){
+      this.$store.state.goodDetail=value;
+      this.$store.state.isMain = '3'
+    },
     delShoppingCar(index){
       let userId = JSON.parse(localStorage.getItem('user')).userId;
       this.shoppingCars.goodsId = index.goodsId;

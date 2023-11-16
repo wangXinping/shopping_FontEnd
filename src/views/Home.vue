@@ -23,7 +23,6 @@
               </template>
               <UserOutlined /><a style="color: black">&nbsp;&nbsp;{{this.user.userName}}</a>
             </a-popover>
-
           </li>
           <li class="li"> | </li>
           <li class="li" v-if="this.user == null"><router-link to="/register" style="color: red">注册</router-link></li>
@@ -35,11 +34,9 @@
         </ul>
       </a-layout-header>
 
-
-
       <!--购物车抽屉-->
       <a-drawer
-          v-model:open="open"
+          v-model:open="this.$store.state.openDrawers"
           class="custom-class"
           root-class-name="root-class-name"
           title="购物车"
@@ -49,7 +46,6 @@
           placement="right">
        <shoppingCar ref="car"/>
       </a-drawer>
-
 
       <a-layout-content class="content">
         <div class="menu">
@@ -82,7 +78,8 @@
 
           </div>
 
-          <div v-if="main">
+          <!--商品主页-->
+          <div v-if="this.$store.state.isMain == '1'">
             <!--轮播图部分-->
             <div class="carousel"  v-if="flag">
               <a-carousel autoplay>
@@ -98,8 +95,13 @@
               <ByName :str="str" ref="child"/>
             </div>
           </div>
-          <div v-else>
+          <!--用户个人信息-->
+          <div v-else-if="this.$store.state.isMain == '2'">
             <userInfo/>
+          </div>
+          <!--商品详情订单-->
+          <div v-else-if="this.$store.state.isMain == '3'">
+            <OrderDetails />
           </div>
         </div>
       </a-layout-content>
@@ -109,6 +111,7 @@
 </template>
 
 <script>
+import OrderDetails from "@/views/content/productDetail";
 import userInfo from "@/views/content/UserInfo";
 import shoppingCar from "@/views/content/shoppingCar";
 import ByName from "@/views/content/getGoodsByName.vue"
@@ -127,13 +130,12 @@ export default defineComponent({
   components:{
     shoppingCar,
     ByName,
-    userInfo
+    userInfo,
+    OrderDetails
   },
   name: "Home",
   data(){
-
     return{
-      main:true,
       open : ref(false),
       flag:true,
       str:'',
@@ -179,17 +181,20 @@ export default defineComponent({
    },
   methods:{
     userInfo(){
-      this.main=false;
+      this.$store.state.isMain='2';
     },
     showDrawer(){
       this.isExistUser();
-      this.open = true;
+      this.$store.state.openDrawers = true;
     },
     afterOpenChange(){
       this.$refs.car.ShoppingCarInfo();
     },
     closeChange(){
-      this.$refs.child.getSellGoodsByName('');
+      if (this.$store.state.isMain == '1'){
+        this.$refs.child.getSellGoodsByName('');
+      }
+
     },
     goLogin(){
       localStorage.removeItem("user");
@@ -203,7 +208,7 @@ export default defineComponent({
       }
     },
     showMain(){
-      this.main=true;
+      this.$store.state.isMain='1';
     },
     onSearch(searchValue){
       this.isExistUser();
@@ -221,12 +226,11 @@ export default defineComponent({
     },
     gomenu(info){
       if (info.key =='home'){
-        if (this.main == true){
+        if (this.$store.state.isMain == '1'){
           this.flag= true;
           this.$refs.child.getSellGoodsByName('');
         }
-        this.main=true;
-
+        this.$store.state.isMain='1';
       }
     }
   }
