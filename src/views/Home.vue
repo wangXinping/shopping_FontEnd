@@ -30,6 +30,8 @@
           <li class="li"> | </li>
           <li class="li"><a  @click="showDrawer" style="color: black"><ShoppingCartOutlined style="color: #fa8724" />&nbsp;&nbsp;我的购物车</a></li>
           <li class="li"> | </li>
+          <li class="li"><a  @click="" style="color: red">我的订单</a></li>
+          <li class="li"> | </li>
           <li class="li"><MessageOutlined />&nbsp;&nbsp;联系客服</li>
         </ul>
       </a-layout-header>
@@ -121,15 +123,13 @@ import userInfo from "@/views/content/UserInfo";
 import shoppingCar from "@/views/content/shoppingCar";
 import ByName from "@/views/content/getGoodsByName.vue"
 import router from "@/router";
-import {getRequest} from "@/utils/api";
 import {ref, reactive, watch, h, defineComponent} from 'vue'
 import {message} from 'antd'
 import {
     HomeOutlined,
-    DesktopOutlined,
-    InboxOutlined,
+    LoginOutlined,
+    LogoutOutlined
 } from '@ant-design/icons-vue'
-import List from "@/views/content/List";
 
 export default defineComponent({
   components:{
@@ -159,16 +159,16 @@ export default defineComponent({
           title: '首页',
         },
         {
-          key: '2',
-          icon: () => h(DesktopOutlined),
-          label: 'Option 2',
-          title: 'Option 2',
+          key: 'publish',
+          icon: () => h(LogoutOutlined),
+          label: '发布旧物',
+          title: '发布旧物',
         },
         {
-          key: '3',
-          icon: () => h(InboxOutlined),
-          label: 'Option 3',
-          title: 'Option 3',
+          key: '',
+          icon: () => h(LoginOutlined),
+          label: '收购旧物',
+          title: '收购旧物',
         }
       ])
     }

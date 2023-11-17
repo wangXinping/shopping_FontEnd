@@ -74,14 +74,18 @@ export default {
   },
   methods:{
     goOrderDetail(){
-      //TODO 商品件数未传入订单模块中
-      /*this.goodOrder.sellGoods = this.goodDetail;
+      this.goodOrder.sellGoods = this.goodDetail;
       this.goodOrder.user = this.users;
-      this.goodOrder.selectNumber = this.formState['input-number'];*/
-      this.$store.state.orderDetail=[];
-      this.$store.state.orderDetail[0]=JSON.parse(JSON.stringify(this.goodDetail))
-      //this.$store.state.orderDetail[0] = JSON.parse(JSON.stringify(this.goodOrder));
-      this.$store.state.isMain = '4'
+      this.goodOrder.selectNumber = this.formState['input-number'];
+      postRequest('/order/',this.goodOrder).then(resp=> {
+        if (resp) {
+          this.$store.state.orderDetail=[];
+          this.$store.state.orderDetail[0]=resp.data;
+          this.$store.state.priceTotal = this.goodOrder.selectNumber * this.goodOrder.sellGoods.price;
+          this.$store.state.isMain = '4'
+        }
+      })
+
     },
     addShoppingCar(){
       let userId = this.$store.state.currentUser.userId;

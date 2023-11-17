@@ -10,7 +10,8 @@ const store = createStore({
         isMain:'1',
         openDrawers:false,
         goodDetail:[],
-        orderDetail:[]
+        orderDetail:[],
+        totalPrice:0
     },
     mutations:{
         INIT_USER(state,user){

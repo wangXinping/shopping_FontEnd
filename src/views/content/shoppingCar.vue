@@ -14,7 +14,7 @@
         :title="index.sellGoods.goodsName"
         :description="index.sellGoods.present.substring(0,10) + '...'">
       <template #avatar>
-        <a-checkbox :value="index.sellGoods">
+        <a-checkbox :value="index">
         </a-checkbox>
         <a-avatar shape="square"
                   v-if="index.sellGoods.goodsImage.imagesName == null"
@@ -26,9 +26,7 @@
                   :src="require('../../../../school-shop/images/goodsimgs/' + index.sellGoods.goodsImage.imagesName)" />
       </template>
     </a-card-meta>
-    <h2 style="color: red;float: right;margin: 28px 18px auto auto">
-      ￥{{index.sellGoods.price}}
-    </h2>
+    <a-input-number style="width: 50px;position: absolute;right: 50px;top:45%" v-model:value="index.selectNumber" :min="1" :max="index.sellGoods.goodsNumber" />
     <a-popconfirm title="确定将该商品移除购物车吗？"
                   ok-text="确认"
                   cancel-text="取消"
@@ -36,6 +34,9 @@
       <template #icon><question-circle-outlined style="color: red" /></template>
       <a href="" style=" position: absolute;top: 14px;right: 30px;">删除</a>
     </a-popconfirm>
+    <span style="color: red;font-weight:bold; font-size:18px;position: absolute;left: 32%;bottom: 20%">
+          ￥{{index.sellGoods.price}}
+    </span>
   </a-card>
   </a-checkbox-group>
 
@@ -60,13 +61,16 @@
 
 <script>
 import { watch,reactive,ref } from 'vue';
-import {getRequest,deleteRequest} from "@/utils/api";
+import {getRequest,postRequest,deleteRequest} from "@/utils/api";
 import { message } from 'antd'
 import 'antd/dist/reset.css'
 export default {
   name: "shoppingCar",
   data(){
     return{
+      formState : reactive({
+        'input-number': 1
+      }),
       allprices:0,
       state :(reactive)({
       indeterminate: true,
@@ -77,11 +81,13 @@ export default {
       shoppingCar:[
         {
           shoppingId: '',
+          selectNumber:1,
           sellGoods:{
             goodsId:'',
             goodsName: '',
             price: '',
             categoryId:'',
+            goodsNumber:0,
             present:'',
             createTime:'',
             goodsImage:{
@@ -105,7 +111,8 @@ export default {
             isVip:''
           }
         }
-      ]
+      ],
+      goodOrder: []
     }
 
   },
@@ -116,7 +123,8 @@ export default {
     'state.checkedList'(val){
       this.allprices = 0;
         val.forEach(e=>{
-          this.allprices += e.price;
+          let prices = e.selectNumber * e.sellGoods.price;
+          this.allprices += prices;
         })
       this.state.indeterminate = !!val.length && val.length < this.shoppingCar.length;
       this.state.checkAll = val.length === this.shoppingCar.length;
@@ -127,10 +135,24 @@ export default {
   methods:{
     payment(){
       if (this.state.checkedList.length != 0){
-        this.$store.state.orderDetail = JSON.parse(JSON.stringify(this.state.checkedList));
-        this.$store.state.isMain = '4';
-        this.$store.state.openDrawers = false;
-        console.log(this.$store.state.orderDetail)
+        let i = 0;
+        this.state.checkedList.forEach(obj=>{
+          postRequest('/order/',obj).then(resp=>{
+            if(resp){
+              this.goodOrder[i] = resp.data;
+              i++;
+              if (this.state.checkedList.length-1 == i){
+                console.log(this.goodOrder)
+                this.$store.state.orderDetail = Object.assign(this.goodOrder);
+                console.log(this.$store.state.orderDetail)
+                this.$store.state.priceTotal = Object.assign(this.allprices);
+                this.$store.state.isMain = '4';
+                this.$store.state.openDrawers = false;
+              }
+            }
+          })
+        })
+
       }else{
         message.error("您还没有选中商品！");
       }
@@ -148,8 +170,9 @@ export default {
       /*this.shoppingCar.forEach(e=>{
           arr.push(e.sellGoods.goodsId);
       })*/
+
       this.shoppingCar.forEach(e=>{
-          arr.push(e.sellGoods);
+          arr.push(e);
       })
       this.state.checkedList = e.target.checked ? arr :[];
 

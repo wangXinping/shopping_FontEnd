@@ -36,15 +36,15 @@
                       :width="80"
                       :height="85"
                       style="margin: 0 auto"
-                      :src="require('../../../../school-shop/images/goodsimgs/'+index.goodsImage.imagesName)"
+                      :src="require('../../../../school-shop/images/goodsimgs/'+index.sellGoods.goodsImage.imagesName)"
                   />
                 </td>
-                <td style="font-size: 18px;padding-left: 20px;width: 300px">{{index.goodsName}}</td>
-                <td style="width: 400px;color: red;font-size: 18px">￥{{index.price}}</td>
-                <td style="font-size: 14px;color: #959595"><CloseOutlined />1</td>
+                <td style="font-size: 18px;padding-left: 20px;width: 300px">{{index.sellGoods.goodsName}}</td>
+                <td style="width: 400px;color: red;font-size: 18px">￥{{index.sellGoods.price}}</td>
+                <td style="font-size: 14px;color: #959595"><CloseOutlined />{{index.selectNumber}}</td>
               </tr>
               <tr>
-                <td colspan="3" style="padding-left: 20px;">{{index.present}}</td>
+                <td colspan="3" style="padding-left: 20px;">{{index.sellGoods.present}}</td>
               </tr>
               <tr>
                 <td colspan="4"><a-divider style="margin: 10px auto"/></td>
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="orderSubmit">
-          <span style="font-size: 22px;color: red;font-weight: bold">总价：￥85.0</span>
+          <span style="font-size: 22px;color: red;font-weight: bold">总价：￥{{ this.$store.state.priceTotal }}</span>
           <a-button v-if="this.value1 == 'online'" danger type="primary" size="large" style="float: right;width: 150px">去支付</a-button>
           <a-button v-else type="primary" size="large" style="float: right;width: 150px" @click="submitOrder">提交订单</a-button>
         </div>
@@ -120,6 +120,7 @@ export default {
       selectAddress1:[],
       turnAddress:false,
       editOpen:false,
+      orders:[],
       labelCol : {
         style: {
           width: '150px',
@@ -139,7 +140,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.ordersDetail);
     this.addressInit();
   },
   methods:{
@@ -166,6 +166,9 @@ export default {
       this.turnAddress =true;
       console.log(this.address)
     },
+  /*  ordersInit(){
+      getRequest('')
+    },*/
     addressInit(){
       getRequest('/address/?userId='+this.users.userId).then(resp=>{
         if (resp){
@@ -174,7 +177,8 @@ export default {
           this.selectAddress = resp[0];
         }
       })
-    }
+    },
+
   }
 }
 </script>
