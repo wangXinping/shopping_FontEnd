@@ -141,10 +141,10 @@ export default {
             if(resp){
               this.goodOrder[i] = resp.data;
               i++;
-              if (this.state.checkedList.length-1 == i){
-                console.log(this.goodOrder)
+              obj.goodsId = obj.sellGoods.goodsId;
+              deleteRequest('/shoppingcar/',obj);
+              if (this.state.checkedList.length == i){
                 this.$store.state.orderDetail = Object.assign(this.goodOrder);
-                console.log(this.$store.state.orderDetail)
                 this.$store.state.priceTotal = Object.assign(this.allprices);
                 this.$store.state.isMain = '4';
                 this.$store.state.openDrawers = false;
