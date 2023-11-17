@@ -99,9 +99,13 @@
           <div v-else-if="this.$store.state.isMain == '2'">
             <userInfo/>
           </div>
-          <!--商品详情订单-->
+          <!--商品详情-->
           <div v-else-if="this.$store.state.isMain == '3'">
-            <OrderDetails />
+            <ProductDetail />
+          </div>
+          <!--订单详情-->
+          <div v-else-if="this.$store.state.isMain == '4'">
+            <GoodsOrder/>
           </div>
         </div>
       </a-layout-content>
@@ -111,7 +115,8 @@
 </template>
 
 <script>
-import OrderDetails from "@/views/content/productDetail";
+import GoodsOrder from "@/views/content/GoodsOrder";
+import ProductDetail from "@/views/content/productDetail";
 import userInfo from "@/views/content/UserInfo";
 import shoppingCar from "@/views/content/shoppingCar";
 import ByName from "@/views/content/getGoodsByName.vue"
@@ -131,7 +136,8 @@ export default defineComponent({
     shoppingCar,
     ByName,
     userInfo,
-    OrderDetails
+    ProductDetail,
+    GoodsOrder
   },
   name: "Home",
   data(){

@@ -52,7 +52,7 @@
       </a-checkbox>
       <div class="prices">
         <h1 style="color: red;display: inline-flex;margin-right: 20px">￥{{allprices}}</h1>
-        <a-button style="background-color: red;color: white" @click="payment">立即支付</a-button>
+        <a-button style="background-color: red;color: white" @click="payment">提交订单</a-button>
       </div>
     </div>
   </a-affix>
@@ -127,10 +127,10 @@ export default {
   methods:{
     payment(){
       if (this.state.checkedList.length != 0){
-        console.log(this.state.checkedList)
-       /* this.$store.commit('GET_GOODS',this.state.checkedList);
-        this.$store.state.isMain = '3';
-        this.$store.state.openDrawers = false;*/
+        this.$store.state.orderDetail = JSON.parse(JSON.stringify(this.state.checkedList));
+        this.$store.state.isMain = '4';
+        this.$store.state.openDrawers = false;
+        console.log(this.$store.state.orderDetail)
       }else{
         message.error("您还没有选中商品！");
       }

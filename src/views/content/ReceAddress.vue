@@ -21,7 +21,7 @@
       <EditOutlined @click="insertAddress(index)" style="position: absolute;bottom: 10px;right: 40px;font-size: 18px;color: #ff4900;"/>
     </div>
 
-    <!--  添加收货地址弹框  -->
+    <!--  添加和修改收货地址弹框  -->
     <a-modal v-model:open="openInsert" title="收货地址>>>" footer="" :afterClose="afterClose">
       <a-divider style="margin: 8px auto"/>
       <a-form :model="this.addressOne" :label-col="labelCol" :wrapper-col="wrapperCol">

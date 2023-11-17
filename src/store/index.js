@@ -10,7 +10,7 @@ const store = createStore({
         isMain:'1',
         openDrawers:false,
         goodDetail:[],
-        input_number:1
+        orderDetail:[]
     },
     mutations:{
         INIT_USER(state,user){
@@ -18,9 +18,6 @@ const store = createStore({
         },
         GET_GOODS(state,goods){
             state.goods = goods;
-        },
-        INPUT_NUMBER(state,number){
-            state.input_number = number;
         }
     },
     actions:{

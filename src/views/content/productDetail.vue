@@ -1,6 +1,6 @@
 <template>
-  <div class="order">
-      <div class="orderCenter">
+  <div class="product">
+      <div class="productCenter">
         <h2 style="margin-left:20px;padding-top: 15px">商品详情>>></h2>
         <a-divider/>
         <div style="width: 405px;height: 450px;border: 1px solid #e0dfdf;margin-left: 20px">
@@ -52,6 +52,12 @@ export default {
         shoppingId: '',
         goodsId:'',
         userId:'',
+      },
+      goodOrder:{
+        orderId:'',
+        sellGoods:[],
+        user:[],
+        selectNumber:''
       }
     }
   },
@@ -68,7 +74,14 @@ export default {
   },
   methods:{
     goOrderDetail(){
-
+      //TODO 商品件数未传入订单模块中
+      /*this.goodOrder.sellGoods = this.goodDetail;
+      this.goodOrder.user = this.users;
+      this.goodOrder.selectNumber = this.formState['input-number'];*/
+      this.$store.state.orderDetail=[];
+      this.$store.state.orderDetail[0]=JSON.parse(JSON.stringify(this.goodDetail))
+      //this.$store.state.orderDetail[0] = JSON.parse(JSON.stringify(this.goodOrder));
+      this.$store.state.isMain = '4'
     },
     addShoppingCar(){
       let userId = this.$store.state.currentUser.userId;
@@ -91,7 +104,7 @@ export default {
       left: 470px;
       top: 95px;
     }
-    .orderCenter{
+    .productCenter{
       position: relative;
       width: 85%;
       height: 80%;
@@ -99,7 +112,7 @@ export default {
       background-color: white;
       border-radius: 5px;
     }
-    .order{
+    .product{
       width: 100%;
       height: 87vh;
     }
